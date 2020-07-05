@@ -1,0 +1,12 @@
+{
+  "name": "SkuTest",
+  "displayName": "SkuTest",
+  "expo": {
+    "name": "SkuTest",
+    "slug": "SkuTest",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
