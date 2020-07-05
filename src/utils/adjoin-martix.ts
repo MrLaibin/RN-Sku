@@ -1,4 +1,5 @@
-export type AdjoinType = Array<string>;
+import {SpecModel} from "../data";
+export type AdjoinType = Array<SpecModel>;
 
 export default class AdjoinMatrix {
     vertex: AdjoinType; // 顶点数组
@@ -21,10 +22,11 @@ export default class AdjoinMatrix {
      * @param sides Array<string>
      *  传入一个顶点，和当前顶点可达的顶点数组，将对应位置置为1
      */
-    setAdjoinVertexs(id: string, sides: AdjoinType) {
-        const pIndex = this.vertex.indexOf(id);
+    setAdjoinVertexs(id: SpecModel, sides: AdjoinType) {
+        // const pIndex = this.vertex.indexOf(id);
+        const pIndex = this.vertex.findIndex(value => value.id===id.id);
         sides.forEach(item => {
-            const index = this.vertex.indexOf(item);
+            const index = this.vertex.findIndex(value => value.id=== item.id);
             this.adjoinArray[pIndex * this.quantity + index] = 1;
         });
     }
@@ -33,8 +35,8 @@ export default class AdjoinMatrix {
      * @param id string
      * 传入顶点的值，获取该顶点的列
      */
-    getVertexCol(id: string) {
-        const index = this.vertex.indexOf(id);
+    getVertexCol(id: SpecModel) {
+        const index = this.vertex.findIndex(value => value.id===id.id);
         const col: Array<number> = [];
         this.vertex.forEach((item, pIndex) => {
             col.push(this.adjoinArray[index + this.quantity * pIndex]);
