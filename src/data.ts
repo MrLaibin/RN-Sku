@@ -2,7 +2,7 @@ export const TOGGLE = "spec";
 
 export type CommoditySpecsType = {
     title: string;
-    list: Array<Model>;
+    list: Array<string>;
 };
 
 export type SpecCategoryType = {
@@ -20,23 +20,8 @@ export type SpecStateType = {
 
 export const initialState: SpecStateType = {
     specList: [
-        { title: "颜色", list: [{
-            id:"红色",
-                title:"红色"
-            },{
-            id: "紫色",
-                title: "紫色"
-            }, {id:"白色",
-                title:"白色"
-
-            }, {
-            id:"黑色",
-                title:"黑色"
-            }] },
-        { title: "套餐", list: [ {
-            title: "套餐一",
-                id: "套餐一"
-            }, {id:"套餐二",title: "套餐二"}, {id:"套餐三",title: "套餐三"}, {id: "套餐四",title: "套餐四"}] },
+        { title: "颜色", list: ["红色", "紫色", "白色", "黑色"] },
+        { title: "套餐", list: ["套餐一", "套餐二", "套餐三", "套餐四"] },
         { title: "内存", list: ["64G", "128G", "256G"] },
         { title: "运营商", list: ["电信", "联通", "移动"] }
     ],
