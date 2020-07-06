@@ -15,7 +15,7 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
     ) {
         super(
             specList.reduce(
-                (total: AdjoinType, current) => [...total, ...current.list],
+                (total: AdjoinType, current) => [...total, ...current.propertyValueList],
                 []
             )
         );
@@ -32,7 +32,7 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
      */
     initSpec() {
         this.specCombinationList.forEach(item => {
-            this.fillInSpec(item.specs);
+            this.fillInSpec(item.propertyValueList);
         });
     }
     // 填写同级点
@@ -42,8 +42,11 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
         this.specList.forEach(item => {
             const params: AdjoinType = [];
             // 获取同级别顶点
-            item.list.forEach(value => {
-                if (specsOption.includes(value)) params.push(value);
+            item.propertyValueList.forEach(value => {
+                let result =specsOption.find(value1 => value1.propertyValueId===value.propertyValueId);
+                if (result) {
+                    params.push(value);
+                }
             });
             // 同级点位创建
             this.fillInSpec(params);
@@ -70,6 +73,7 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
      * 填写邻接矩阵的值
      */
     fillInSpec(params: AdjoinType) {
+        console.log("lkjsdlfk1j   "+JSON.stringify(params))
         params.forEach(param => {
             this.setAdjoinVertexs(param, params);
         });

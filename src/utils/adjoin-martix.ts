@@ -1,4 +1,6 @@
-export type AdjoinType = Array<string>;
+import {SpecModel} from "../data";
+
+export type AdjoinType = Array<SpecModel>;
 
 export default class AdjoinMatrix {
     vertex: AdjoinType; // 顶点数组
@@ -21,12 +23,14 @@ export default class AdjoinMatrix {
      * @param sides Array<string>
      *  传入一个顶点，和当前顶点可达的顶点数组，将对应位置置为1
      */
-    setAdjoinVertexs(id: string, sides: AdjoinType) {
-        const pIndex = this.vertex.indexOf(id);
+    setAdjoinVertexs(id: SpecModel, sides: AdjoinType) {
+        const pIndex = this.vertex.findIndex(value => value.propertyValueId=== id.propertyValueId);
         sides.forEach(item => {
-            const index = this.vertex.indexOf(item);
+            const index = this.vertex.findIndex(value => value.propertyValueId===item.propertyValueId);
+            // console.log("setAdjoinVertexs forEach "+JSON.stringify(index))
             this.adjoinArray[pIndex * this.quantity + index] = 1;
         });
+        // console.log("setAdjoinVertexs "+JSON.stringify(pIndex))
     }
 
     /*
@@ -34,11 +38,14 @@ export default class AdjoinMatrix {
      * 传入顶点的值，获取该顶点的列
      */
     getVertexCol(id: string) {
-        const index = this.vertex.indexOf(id);
+        const index = this.vertex.findIndex(value => value.propertyValueId=== id);
+        // console.log("getVertexCol  "+index)
+
         const col: Array<number> = [];
         this.vertex.forEach((item, pIndex) => {
             col.push(this.adjoinArray[index + this.quantity * pIndex]);
         });
+        // console.log("getVertexCol  "+JSON.stringify(this.vertex))
         return col;
     }
 
@@ -47,7 +54,8 @@ export default class AdjoinMatrix {
      * 传入一个顶点数组，求出该数组所有顶点的列的合
      */
     getColSum(params: AdjoinType) {
-        const paramsVertex = params.map(id => this.getVertexCol(id));
+        const paramsVertex = params.map(id => this.getVertexCol(id.propertyValueId));
+        console.log(JSON.stringify(paramsVertex))
         const paramsVertexSum: Array<number> = [];
         this.vertex.forEach((item, index) => {
             const rowtotal = paramsVertex
@@ -81,6 +89,7 @@ export default class AdjoinMatrix {
      */
     getUnions(params: AdjoinType) {
         const paramsColSum = this.getColSum(params);
+
         let unions: AdjoinType = [];
         paramsColSum.forEach((item, index) => {
             if (item >= params.length && this.vertex[index])

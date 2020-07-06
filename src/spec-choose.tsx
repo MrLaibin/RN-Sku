@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import SpecAdjoinMatrix from "./utils/spec-adjoin-martix";
-import {initialState} from "./data";
+import {initialState, SpecModel} from "./data";
 import {StyleSheet, Text, View} from "react-native";
 
 
@@ -21,27 +21,32 @@ const Spec: React.FC = () => {
     // 获得可选项表
     const optionSpecs = specAdjoinMatrix.getSpecscOptions(specsS);
 
-    const handleClick = function(bool: boolean, text: string, index: number) {
+    const handleClick = function(bool: boolean, text: SpecModel, index: number) {
         // 排除可选规格里面没有的规格
-        if (specsS[index] !== text && !bool){
+        if (specsS[index].propertyValueId !== text.propertyValueId && !bool){
             console.log("return "+ text)
             return;
         }
         // 根据text判断是否已经被选中了
-        specsS[index] = specsS[index] === text ? "" : text;
-        console.log(Date.now()+'===='+JSON.stringify(specsS))
+        specsS[index] = specsS[index].propertyValueId === text.propertyValueId ? "" : text;
+        // console.log(Date.now()+'===='+JSON.stringify(specsS))
         setSpecsS(specsS.slice());
     };
 
     return (
         <View style={styles.container}>
-            {specList.map(({ title, list }, index) => (
+            {specList.map(({ propertyName, propertyValueList }, index) => (
                 <View key={index}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.title}>{propertyName}</Text>
                     <View style={styles.specBox}>
-                        {list.map((value, i) => {
-                            const isOption = optionSpecs.includes(value); // 当前规格是否可选
-                            const isActive = specsS.includes(value); // 当前规格是否被选
+                        {propertyValueList.map((value, i) => {
+                            // const isOption = optionSpecs.includes(value); // 当前规格是否可选
+                            // console.log(JSON.stringify(optionSpecs))
+                            // console.log("==="+JSON.stringify(value))
+                            const isOption = !!optionSpecs.find(value1 => value.propertyValueId === value1.propertyValueId); // 当前规格是否可选
+
+                            // const isActive = specsS.includes(value); // 当前规格是否被选
+                            const isActive = !!specsS.find(value1 => value1.propertyValueId === value.propertyValueId); // 当前规格是否被选
                             return (
                                 <Text
                                     key={i}
