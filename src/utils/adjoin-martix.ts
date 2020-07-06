@@ -14,6 +14,7 @@ export default class AdjoinMatrix {
     }
     // 初始化数组
     init() {
+
         this.adjoinArray = Array(this.quantity * this.quantity).fill(0);
     }
 
@@ -24,9 +25,11 @@ export default class AdjoinMatrix {
      */
     setAdjoinVertexs(id: SpecModel, sides: AdjoinType) {
         // const pIndex = this.vertex.indexOf(id);
-        const pIndex = this.vertex.findIndex(value => value.id===id.id);
+
+        const pIndex = this.vertex.findIndex(value => value.propertyValueId===id.propertyValueId);
         sides.forEach(item => {
-            const index = this.vertex.findIndex(value => value.id=== item.id);
+            const index = this.vertex.findIndex(value => value.propertyValueId=== item.propertyValueId);
+            console.log(item.propertyValue)
             this.adjoinArray[pIndex * this.quantity + index] = 1;
         });
     }
@@ -36,11 +39,12 @@ export default class AdjoinMatrix {
      * 传入顶点的值，获取该顶点的列
      */
     getVertexCol(id: SpecModel) {
-        const index = this.vertex.findIndex(value => value.id===id.id);
+        const index = this.vertex.findIndex(value => value.propertyValueId===id.propertyValueId);
         const col: Array<number> = [];
         this.vertex.forEach((item, pIndex) => {
             col.push(this.adjoinArray[index + this.quantity * pIndex]);
         });
+
         return col;
     }
 
@@ -51,11 +55,13 @@ export default class AdjoinMatrix {
     getColSum(params: AdjoinType) {
         const paramsVertex = params.map(id => this.getVertexCol(id));
         const paramsVertexSum: Array<number> = [];
+
         this.vertex.forEach((item, index) => {
             const rowtotal = paramsVertex
                 .map(value => value[index])
                 .reduce((total, current) => {
                     total += current || 0;
+
                     return total;
                 }, 0);
             paramsVertexSum.push(rowtotal);

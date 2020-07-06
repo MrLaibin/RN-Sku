@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from "react";
 import SpecAdjoinMatrix from "./utils/spec-adjoin-martix";
 import {initialState, SpecModel} from "./data";
-import {StyleSheet, Text, View} from "react-native";
+import {ScrollView, StyleSheet, Text, View} from "react-native";
 
 
 const Spec: React.FC = () => {
@@ -9,44 +9,44 @@ const Spec: React.FC = () => {
     //     (state: RootState) => state.spec
     // );
 
-    const {specList, specCombinationList} = initialState;
+    const {propertyList, skuItemList} = initialState;
     // 已选择的规格，长度为规格列表的长度
-    const [specsS, setSpecsS] = useState(Array(specList.length).fill(""));
+    const [specsS, setSpecsS] = useState(Array(propertyList.length).fill(""));
 
     // 创建一个规格矩阵
     const specAdjoinMatrix = useMemo(
-        () => new SpecAdjoinMatrix(specList, specCombinationList),
-        [specList, specCombinationList]
+        () => new SpecAdjoinMatrix(propertyList, skuItemList),
+        [propertyList, skuItemList]
     );
+
     // 获得可选项表
     const optionSpecs = specAdjoinMatrix.getSpecscOptions(specsS);
 
     const handleClick = function (bool: boolean, text: SpecModel, index: number) {
         // 排除可选规格里面没有的规格
-        if (specsS[index].id !== text.id && !bool) {
+        if (specsS[index].id !== text.propertyValueId && !bool) {
             console.log("return " + text)
             return;
         }
         // 根据text判断是否已经被选中了
-        specsS[index] = specsS[index].id === text.id ? "" : text;
-        console.log(Date.now() + '====' + JSON.stringify(text))
+        specsS[index] = specsS[index].propertyValueId === text.propertyValueId ? "" : text;
+        console.log(Date.now() + '====' + JSON.stringify(specsS))
         setSpecsS(specsS.slice());
-        alert(JSON.stringify(specsS))
-
     };
 
     return (
-        <View style={styles.container}>
-            {specList.map(({title, list}, index) => (
+        <ScrollView style={styles.container}>
+            {/*<Text>{JSON.stringify(specAdjoinMatrix)}</Text>*/}
+            {propertyList.map(({propertyName, propertyValueList}, index) => (
                 <View key={index}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.title}>{propertyName}</Text>
                     <View style={styles.specBox}>
-                        {list.map((value, i) => {
+                        {propertyValueList.map((value, i) => {
                             // const isOption = optionSpecs.includes(value); // 当前规格是否可选
-                            const isOption = optionSpecs.find(value1 => value1.id === value.id) ? true : false; // 当前规格是否可选
+                            const isOption = optionSpecs.find(value1 => value1.propertyValueId === value.propertyValueId) ? true : false; // 当前规格是否可选
 
                             // const isActive = specsS.includes(value); // 当前规格是否被选
-                            const isActive = specsS.find(value1 => value1.id === value.id) ? true : false; // 当前规格是否被选
+                            const isActive = specsS.find(value1 => value1.propertyValueId === value.propertyValueId) ? true : false; // 当前规格是否被选
                             return (
                                 <Text
                                     key={i}
@@ -67,7 +67,8 @@ const Spec: React.FC = () => {
                     </View>
                 </View>
             ))}
-        </View>
+
+        </ScrollView>
     );
 };
 
@@ -75,11 +76,9 @@ export default Spec;
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '100%',
+        marginTop:40,
         paddingHorizontal: 20,
         borderColor: 'gray',
-        justifyContent: "center",
-        alignContent: "center"
     },
     title: {
         fontSize: 16,

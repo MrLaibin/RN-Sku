@@ -6,9 +6,10 @@ import Spec from "./src/spec-choose";
 export default function App() {
   return (
     <View style={styles.container}>
+        <Spec/>
       <Text>Op1en up App.tsx to start working on your22 app!</Text>
       <StatusBar style="auto" />
-      <Spec/>
+
     </View>
   );
 }
